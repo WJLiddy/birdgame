@@ -14,11 +14,13 @@ public class PlayerCharacter : MonoBehaviour
     public float walkAnim;
     public float flapTime = 0;
     public float weaponCooldown = 0;
+    public bool isReady = false;
     public Sprite[] flysprites, groundsprites;
-    public Weapon weapon = new Crossbow();
+    public Weapon weapon = null;
 
     public SpriteRenderer helmSprite;
     public SpriteRenderer weaponSprite;
+    bool facing_left;
     // Use this for initialization
     void Start()
     {
@@ -26,7 +28,18 @@ public class PlayerCharacter : MonoBehaviour
         groundsprites = Resources.LoadAll<Sprite>("birdwalkanim/");
         GetComponent<Rigidbody2D>().drag = 1;
         GetComponent<Rigidbody2D>().gravityScale = 0.1f;
+        GameObject weaponchild = Instantiate(new GameObject());
+        weaponchild.transform.SetParent(this.gameObject.transform);
+        weaponSprite = weaponchild.gameObject.AddComponent<SpriteRenderer>();
+        weaponSprite.transform.localPosition = new Vector3(0, 0, -0.01f);
 
+
+        GameObject helmchild = Instantiate(new GameObject());
+        helmchild.transform.SetParent(this.gameObject.transform);
+        helmSprite = helmchild.gameObject.AddComponent<SpriteRenderer>();
+        helmSprite.transform.localPosition = new Vector3(0, 0, -0.01f);
+
+        swapWeapon(new Crossbow());
     }
 
     public void reColor()
@@ -39,7 +52,12 @@ public class PlayerCharacter : MonoBehaviour
     public void swapWeapon( Weapon w)
     {
         this.weapon = w;
-        weaponSprite.sprite = Resources.Load<Sprite>(w)
+        weaponSprite.sprite = Resources.Load<Sprite>("weapon/" + w.getFilePath());
+    }
+
+    public void swapHelm(Vector3 col)
+    {
+        helmSprite.sprite = LookRandomizer.Randomize(Resources.Load<Sprite>("item/helm"),col);
     }
 
     public bool isGrounded()
@@ -56,6 +74,29 @@ public class PlayerCharacter : MonoBehaviour
     }
 
     // Bird should fly in some direction.
+    public void faceDirection(float dir)
+    {
+        if (dir > 0)
+        {
+            facing_left = !true;
+            GetComponent<SpriteRenderer>().flipX = false;
+            if(weaponSprite != null)
+                weaponSprite.flipX = false;
+            if (helmSprite != null)
+                helmSprite.flipX = false;
+        }
+        if (dir < 0)
+        {
+            facing_left = !false;
+            GetComponent<SpriteRenderer>().flipX = true;
+            if (weaponSprite != null)
+                weaponSprite.flipX = true;
+            if (helmSprite != null)
+                helmSprite.flipX = true;
+        }
+    }
+
+    // Bird should fly in some direction.
     public void flyDirection(Vector2 dir)
     {
 
@@ -63,14 +104,7 @@ public class PlayerCharacter : MonoBehaviour
         {
             GetComponent<Rigidbody2D>().AddForce(dir * FLAP_IMPULSE * Time.deltaTime, ForceMode2D.Impulse);
             flapTime = FLAP_MAX_SEC;
-            if (dir[0] > 0)
-            {
-                GetComponent<SpriteRenderer>().flipX = false;
-            }
-            if (dir[0] < 0)
-            {
-                GetComponent<SpriteRenderer>().flipX = true;
-            }
+            faceDirection(dir[0]);
         } else
         {
             flapTime -= Time.deltaTime;
@@ -80,14 +114,7 @@ public class PlayerCharacter : MonoBehaviour
         if(isGrounded())
         {
             GetComponent<Rigidbody2D>().AddForce(dir *  RUN_FORCE_SEC * Time.deltaTime, ForceMode2D.Impulse);
-            if (dir[0] > 0)
-            {
-                GetComponent<SpriteRenderer>().flipX = false;
-            }
-            if (dir[0] < 0)
-            {
-                GetComponent<SpriteRenderer>().flipX = true;
-            }
+            faceDirection(dir[0]);
         }
 
         if (isGrounded())
@@ -115,14 +142,14 @@ public class PlayerCharacter : MonoBehaviour
         weaponCooldown = Mathf.Max(0, weaponCooldown);
     }
 
-    public void fireProjectile(bool left)
+    public void fireProjectile()
     {
         if (weaponCooldown <= 0)
         {
             weaponCooldown = weapon.getCooldown();
             GameObject go = Resources.Load<GameObject>("projectile/Projectile");
             var proj = Instantiate(go);
-            proj.GetComponent<Projectile>().setProjType(weapon.getProjectileType(), this.transform.position, left ? Vector2.left : Vector2.right, true);
+            proj.GetComponent<Projectile>().setProjType(weapon.getProjectileType(), this.transform.position, facing_left ? Vector2.left : Vector2.right, true);
         }
     }
 

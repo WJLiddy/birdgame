@@ -25,4 +25,9 @@ public class Common
         }
         return pc;
     }
+
+    public static void transition(GameStateMgr.State s)
+    {
+        GameObject.Find("GameManager").GetComponent<GameStateMgr>().transition(s);
+    }
 }

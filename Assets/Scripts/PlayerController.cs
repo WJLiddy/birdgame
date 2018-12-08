@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     // Assumes joycon for now...
-    int controllerID = 0;
+    public int controllerID = 0;
 
     Joycon j;
     List<Joycon> joycons;
@@ -23,12 +23,7 @@ public class PlayerController : MonoBehaviour
         // later: prioritise based on input.
         if (j.GetButton(Joycon.Button.DPAD_UP))
         {
-            pc.fireProjectile(false);
-        }
-        else
-        if (j.GetButton(Joycon.Button.DPAD_DOWN))
-        {
-            pc.fireProjectile(true);
+            pc.fireProjectile();
         }
 
         if (j.GetButtonDown(Joycon.Button.DPAD_RIGHT))

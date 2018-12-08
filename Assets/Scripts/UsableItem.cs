@@ -6,10 +6,16 @@ public class UsableItem : MonoBehaviour
 {
     public string itemName;
     float triggerDist = 0;
+    Vector3 helmArgCol;
 
     void GetSprite(string sname)
     {
         GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("grounditem/" + sname);
+        if(sname == "helm")
+        {
+            helmArgCol = new Vector3(Random.value, Random.value, Random.value);
+            GetComponent<SpriteRenderer>().sprite = LookRandomizer.Randomize(GetComponent<SpriteRenderer>().sprite, helmArgCol);
+        }
     }
 
     void Start()
@@ -44,6 +50,11 @@ public class UsableItem : MonoBehaviour
                 case "gun": caller.swapWeapon(new Pistol()); break;
                 case "crossbow": caller.swapWeapon(new Crossbow()); break;
                 case "axe": caller.swapWeapon(new Axe()); break;
+                case "notrd":
+                    caller.isReady = true;
+                    GetSprite("rd");
+                    break;
+                case "helm": caller.swapHelm(helmArgCol); break;
             }
         }
     }

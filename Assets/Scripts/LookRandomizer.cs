@@ -10,7 +10,7 @@ public class LookRandomizer
         public Sprite[] fly;
     }
 
-    private static Sprite Randomize(Sprite s, Vector3 data)
+    public static Sprite Randomize(Sprite s, Vector3 data)
     {
         Texture2D orig = s.texture;
         var pixels = orig.GetPixels32();
@@ -44,9 +44,9 @@ public class LookRandomizer
             } else
             {
                 cr.a = 255;
-                cr.r = (byte)(greyPixels[i] + radiances[i] * data.x);
-                cr.g = (byte)(greyPixels[i] + radiances[i] * data.y);
-                cr.b = (byte)(greyPixels[i] + radiances[i] * data.z);
+                cr.r = (byte)(Mathf.Min(255,greyPixels[i] + radiances[i] * data.x));
+                cr.g = (byte)(Mathf.Min(255, greyPixels[i] + radiances[i] * data.y));
+                cr.b = (byte)(Mathf.Min(255, greyPixels[i] + radiances[i] * data.z));
             }
             newPixels.Add(cr);
         }

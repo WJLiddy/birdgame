@@ -41,12 +41,15 @@ public class Projectile : MonoBehaviour
 	    switch(p)
         {
             case ProjType.ARROW:
-                rb.gravityScale = 0.2f;
+                rb.gravityScale = 0.3f;
                 launchscale = 5;
+                firevec.y = 0.05f;
                 break;
             case ProjType.AXE:
                 rb.gravityScale = 1f;
                 launchscale = 2;
+                rb.AddTorque(1);
+                firevec.y = 0.3f;
                 break;
             case ProjType.BULLET:
                 rb.gravityScale = 0f;
