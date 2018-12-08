@@ -23,7 +23,7 @@ public class GameStateMgr : MonoBehaviour
 
     void Start()
     {
-        transition(State.INTRO);
+        transition(State.CHARSELECT);
     }
 
     public void playerSetup()
@@ -48,6 +48,7 @@ public class GameStateMgr : MonoBehaviour
                 title.SetActive(true);
                 break;
             case State.INTRO:
+                intro.SetActive(true);
                 lead.clip = Resources.Load<AudioClip>("music/birdicarus lead");
                 bass.clip = Resources.Load<AudioClip>("music/birdicarus bass");
                 lead.Play();
@@ -65,12 +66,17 @@ public class GameStateMgr : MonoBehaviour
 
     void Update()
     {
-        if(!lead.isPlaying)
+        if (!lead.isPlaying)
         {
             lead.time = 7.034f;
             bass.time = 7.034f;
             lead.Play();
             bass.Play();
+        }
+
+        if(currentState == State.CHARSELECT && Common.allPlayersReady())
+        {
+            transition(State.GAMEPLAY);
         }
 
     }

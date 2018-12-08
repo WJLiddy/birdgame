@@ -30,4 +30,9 @@ public class Common
     {
         GameObject.Find("GameManager").GetComponent<GameStateMgr>().transition(s);
     }
+
+    public static bool allPlayersReady()
+    {
+        return !getPCs().Exists(delegate (PlayerCharacter pc) { return !pc.isReady; });
+    }
 }
