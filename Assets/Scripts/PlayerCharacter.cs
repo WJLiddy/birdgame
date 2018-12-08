@@ -13,20 +13,46 @@ public class PlayerCharacter : MonoBehaviour
     public float WALK_FRAME_SEC = 0.4f;
     public float walkAnim;
     public float flapTime = 0;
+    public float weaponCooldown = 0;
     public Sprite[] flysprites, groundsprites;
-	// Use this for initialization
-	void Start ()
+    public Weapon weapon = new Crossbow();
+
+    public SpriteRenderer helmSprite;
+    public SpriteRenderer weaponSprite;
+    // Use this for initialization
+    void Start()
     {
         flysprites = Resources.LoadAll<Sprite>("birdflyanim/");
         groundsprites = Resources.LoadAll<Sprite>("birdwalkanim/");
         GetComponent<Rigidbody2D>().drag = 1;
         GetComponent<Rigidbody2D>().gravityScale = 0.1f;
 
-	}
+    }
+
+    public void reColor()
+    {
+        var v = LookRandomizer.PLDRandomizer();
+        flysprites = v.fly;
+        groundsprites = v.walk;
+    }
+
+    public void swapWeapon( Weapon w)
+    {
+        this.weapon = w;
+        weaponSprite.sprite = Resources.Load<Sprite>(w)
+    }
 
     public bool isGrounded()
     {
         return (Physics2D.Raycast(new Vector2(transform.position.x,transform.position.y - (GetComponent<CapsuleCollider2D>().size.y/2)), -Vector3.up, + 0.01f).collider != null);
+    }
+
+    public void attemptUse()
+    {
+       foreach(var v in Common.getUsables())
+       {
+            v.tryUse(this);     
+       }
     }
 
     // Bird should fly in some direction.
@@ -83,6 +109,20 @@ public class PlayerCharacter : MonoBehaviour
             {
                 setFlySprite(1);
             }
+        }
+
+        weaponCooldown -= Time.deltaTime;
+        weaponCooldown = Mathf.Max(0, weaponCooldown);
+    }
+
+    public void fireProjectile(bool left)
+    {
+        if (weaponCooldown <= 0)
+        {
+            weaponCooldown = weapon.getCooldown();
+            GameObject go = Resources.Load<GameObject>("projectile/Projectile");
+            var proj = Instantiate(go);
+            proj.GetComponent<Projectile>().setProjType(weapon.getProjectileType(), this.transform.position, left ? Vector2.left : Vector2.right, true);
         }
     }
 

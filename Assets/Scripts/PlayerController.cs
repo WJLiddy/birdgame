@@ -20,7 +20,22 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        //j.GetButtonDown(Joycon.Button.DPAD_UP)
+        // later: prioritise based on input.
+        if (j.GetButton(Joycon.Button.DPAD_UP))
+        {
+            pc.fireProjectile(false);
+        }
+        else
+        if (j.GetButton(Joycon.Button.DPAD_DOWN))
+        {
+            pc.fireProjectile(true);
+        }
+
+        if (j.GetButtonDown(Joycon.Button.DPAD_RIGHT))
+        {
+            pc.attemptUse();
+        }
+
         pc.flyDirection(new Vector2(j.GetStick()[1], -j.GetStick()[0]));
         /**
             // GetButtonDown checks if a button has been pressed (not held)
