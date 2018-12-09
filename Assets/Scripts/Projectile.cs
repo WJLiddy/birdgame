@@ -28,7 +28,7 @@ public class Projectile : MonoBehaviour
     }
     
 	// Use this for initialization
-	public void setProjType(ProjType p, Vector2 start, Vector2 firevec, bool friendly)
+	public void setProjType(ProjType p, Vector2 start, Vector2 rel_vel, Vector2 firevec, bool friendly)
     {
 
         this.gameObject.layer = friendly ? 10 : 11;
@@ -43,13 +43,15 @@ public class Projectile : MonoBehaviour
             case ProjType.ARROW:
                 rb.gravityScale = 0.3f;
                 launchscale = 5;
-                firevec.y = 0.05f;
+                if(firevec.x != 0)
+                    firevec.y = 0.05f;
                 break;
             case ProjType.AXE:
                 rb.gravityScale = 1f;
                 launchscale = 2;
                 rb.AddTorque(1);
-                firevec.y = 0.3f;
+                if (firevec.x != 0)
+                    firevec.y = 0.3f;
                 break;
             case ProjType.BULLET:
                 rb.gravityScale = 0f;
@@ -57,7 +59,7 @@ public class Projectile : MonoBehaviour
                 break;
         }
         
-        GetComponent<Rigidbody2D>().velocity = firevec * launchscale;
+        GetComponent<Rigidbody2D>().velocity = rel_vel + (firevec * launchscale);
         GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("projectile/" + p.ToString());
         var bx = gameObject.AddComponent<BoxCollider2D>();
         bx.size = 0.01f * getWeaponDim(p);

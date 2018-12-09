@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     // Assumes joycon for now...
     public int controllerID = 0;
+    public bool useKeys = false;
 
     Joycon j;
     List<Joycon> joycons;
@@ -13,25 +14,56 @@ public class PlayerController : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
-        joycons = JoyconManager.Instance.j;
-        j = joycons[0];
+        if (!useKeys)
+        {
+            joycons = JoyconManager.Instance.j;
+            j = joycons[controllerID];
+        }
     }
 	
+    Vector2 getKeyboardMoveVec()
+    {
+        float x = 0;
+        float y = 0;
+        if(Input.GetKey(KeyCode.D))
+        {
+            x = 1;
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            x = -1;
+        }
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            y = 1;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            y = -1;
+        }
+        return new Vector2(x, y);
+    }
 	// Update is called once per frame
 	void Update ()
     {
         // later: prioritise based on input.
-        if (j.GetButton(Joycon.Button.DPAD_UP))
+        if ((useKeys && Input.GetKey(KeyCode.L)) || (!useKeys && j.GetButton(Joycon.Button.DPAD_UP)))
         {
             pc.fireProjectile();
         }
 
-        if (j.GetButtonDown(Joycon.Button.DPAD_RIGHT))
+        if ((useKeys && Input.GetKey(KeyCode.K)) || (!useKeys && j.GetButton(Joycon.Button.DPAD_RIGHT)))
+        {
+            pc.dropProjectile();
+        }
+
+        if ((!useKeys && j.GetButtonDown(Joycon.Button.DPAD_LEFT)) || (useKeys && Input.GetKeyDown(KeyCode.I)))
         {
             pc.attemptUse();
         }
 
-        pc.flyDirection(new Vector2(j.GetStick()[1], -j.GetStick()[0]));
+        pc.flyDirection(useKeys ? getKeyboardMoveVec() : new Vector2(j.GetStick()[1], -j.GetStick()[0]));
         /**
             // GetButtonDown checks if a button has been pressed (not held)
             if (j.GetButtonDown(Joycon.Button.SHOULDER_2))

@@ -9,6 +9,9 @@ public class GameStateMgr : MonoBehaviour
     public GameObject intro;
     public GameObject title;
 
+    public GameObject level;
+
+    public float levelOpenCinematicTimer = 0f;
     public List<GameObject> cubes = new List<GameObject>();
 
     public enum State
@@ -23,19 +26,53 @@ public class GameStateMgr : MonoBehaviour
 
     void Start()
     {
-        transition(State.CHARSELECT);
+        transition(State.INTRO);
+    }
+
+    public void setUpLevel()
+    {
+        level = LevelGenerator.levelGenerate();
+        level.transform.localPosition = new Vector2(-4, 0);
+        float i = 1;
+        foreach(PlayerCharacter pc in Common.getPCs())
+        {
+            pc.transform.localPosition = new Vector2(-3f + (0.2f * i), 79f);
+            i += 1f;
+        }
     }
 
     public void playerSetup()
     {
         int pCount = JoyconManager.Instance.j.Count;
+        if (pCount == 0)
+        {
+            GameObject cube = Instantiate(Resources.Load<GameObject>("cubicle"));
+            cubes.Add(cube);
+            GameObject player = Instantiate(Resources.Load<GameObject>("player"));
+            cube.transform.localPosition = new Vector2(-2, 0);
+            player.transform.localPosition = new Vector2(-1, 1);
+            player.GetComponent<PlayerController>().useKeys = true;
+        }
         if (pCount >= 1)
         {
             GameObject cube = Instantiate(Resources.Load<GameObject>("cubicle"));
+            cubes.Add(cube);
             GameObject player = Instantiate(Resources.Load<GameObject>("player"));
             cube.transform.localPosition = new Vector2(-2, 0);
             player.transform.localPosition = new Vector2(-1, 1);
             player.GetComponent<PlayerController>().controllerID = 0;
+        }
+    }
+
+    public void levelOpenCinematic()
+    {
+        if(levelOpenCinematicTimer < 16)
+        {
+            levelOpenCinematicTimer += Time.deltaTime;
+            Camera.main.GetComponent<GameCamera>().transform.position = new Vector3(0, ((levelOpenCinematicTimer) / 16f) * 80, -10);
+        } else
+        {
+            Camera.main.GetComponent<GameCamera>().trackingMode = true;
         }
     }
     public void transition(State s)
@@ -60,12 +97,30 @@ public class GameStateMgr : MonoBehaviour
                 playerSetup();
                 break;
             case State.GAMEPLAY:
-                break;
+                levelOpenCinematicTimer = 0;
+                lead.volume = 1f;
+                lead.Stop();
+                lead.clip = Resources.Load<AudioClip>("music/swingit lead");
+                lead.Play();
+                bass.Stop();
+                cubes.ForEach(
+                    delegate (GameObject go)
+                    {
+                        Destroy(go);
+                    });
+                cubes.Clear();
+                setUpLevel();
+
+                    break;
         }
     }
 
     void Update()
     {
+        if (currentState == State.GAMEPLAY)
+        {
+            levelOpenCinematic();
+        }
         if (!lead.isPlaying)
         {
             lead.time = 7.034f;
