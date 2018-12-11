@@ -53,12 +53,12 @@ public class PlayerController : MonoBehaviour
             pc.fireProjectile();
         }
 
-        if ((useKeys && Input.GetKey(KeyCode.K)) || (!useKeys && j.GetButton(Joycon.Button.DPAD_RIGHT)))
+        if ((useKeys && Input.GetKey(KeyCode.I)) || (!useKeys && j.GetButton(Joycon.Button.DPAD_LEFT)))
         {
-            pc.dropProjectile();
+            pc.altProjectile();
         }
 
-        if ((!useKeys && j.GetButtonDown(Joycon.Button.DPAD_LEFT)) || (useKeys && Input.GetKeyDown(KeyCode.I)))
+        if ((!useKeys && j.GetButtonDown(Joycon.Button.DPAD_RIGHT)) || (useKeys && Input.GetKeyDown(KeyCode.K)))
         {
             pc.attemptUse();
         }

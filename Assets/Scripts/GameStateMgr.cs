@@ -26,17 +26,17 @@ public class GameStateMgr : MonoBehaviour
 
     void Start()
     {
-        transition(State.INTRO);
+        transition(State.CHARSELECT);
     }
 
     public void setUpLevel()
     {
         level = LevelGenerator.levelGenerate();
-        level.transform.localPosition = new Vector2(-4, 0);
+        level.transform.localPosition = new Vector2(0, -3);
         float i = 1;
         foreach(PlayerCharacter pc in Common.getPCs())
         {
-            pc.transform.localPosition = new Vector2(-3f + (0.2f * i), 79f);
+            pc.transform.localPosition = new Vector2(3f + (0.4f * i), 0f);
             i += 1f;
         }
     }
@@ -69,7 +69,7 @@ public class GameStateMgr : MonoBehaviour
         if(levelOpenCinematicTimer < 16)
         {
             levelOpenCinematicTimer += Time.deltaTime;
-            Camera.main.GetComponent<GameCamera>().transform.position = new Vector3(0, ((levelOpenCinematicTimer) / 16f) * 80, -10);
+            Camera.main.GetComponent<GameCamera>().transform.position = new Vector3((1-((levelOpenCinematicTimer) / 16f)) * 80, 0, -10);
         } else
         {
             Camera.main.GetComponent<GameCamera>().trackingMode = true;
@@ -100,6 +100,7 @@ public class GameStateMgr : MonoBehaviour
                 levelOpenCinematicTimer = 0;
                 lead.volume = 1f;
                 lead.Stop();
+                lead.time = 0f;
                 lead.clip = Resources.Load<AudioClip>("music/swingit lead");
                 lead.Play();
                 bass.Stop();

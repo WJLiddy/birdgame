@@ -28,7 +28,7 @@ public class Projectile : MonoBehaviour
     }
     
 	// Use this for initialization
-	public void setProjType(ProjType p, Vector2 start, Vector2 rel_vel, Vector2 firevec, bool friendly)
+	public void setProjType(ProjType p, Vector2 start, Vector2 rel_vel, Vector2 firevec, bool friendly, bool alt)
     {
 
         this.gameObject.layer = friendly ? 10 : 11;
@@ -43,14 +43,12 @@ public class Projectile : MonoBehaviour
             case ProjType.ARROW:
                 rb.gravityScale = 0.3f;
                 launchscale = 5;
-                if(firevec.x != 0)
-                    firevec.y = 0.05f;
+                firevec.y = 0.05f;
                 break;
             case ProjType.AXE:
                 rb.gravityScale = 1f;
                 launchscale = 2;
                 rb.AddTorque(1);
-                if (firevec.x != 0)
                     firevec.y = 0.3f;
                 break;
             case ProjType.BULLET:

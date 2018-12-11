@@ -11,12 +11,12 @@ public class GameCamera : MonoBehaviour
 		
 	}
     
-    public float avgPlayerY()
+    public float avgPlayerX()
     {
         float sum = 0;
         foreach (var v in Common.getPCs())
         {
-            sum += v.transform.position.y;
+            sum += v.transform.position.x;
         }
         return (sum / Common.getPCs().Count);
     }
@@ -26,7 +26,7 @@ public class GameCamera : MonoBehaviour
     {
 		if(trackingMode)
         {
-            transform.localPosition = new Vector3(0, avgPlayerY(), -10);
+            transform.localPosition = new Vector3(avgPlayerX(), 0, -10);
         }
 	}
 }

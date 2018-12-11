@@ -149,18 +149,18 @@ public class PlayerCharacter : MonoBehaviour
             weaponCooldown = weapon.getCooldown();
             GameObject go = Resources.Load<GameObject>("projectile/Projectile");
             var proj = Instantiate(go);
-            proj.GetComponent<Projectile>().setProjType(weapon.getProjectileType(), this.transform.position, this.gameObject.GetComponent<Rigidbody2D>().velocity, facing_left ? Vector2.left : Vector2.right, true);
+            proj.GetComponent<Projectile>().setProjType(weapon.getProjectileType(), this.transform.position, this.gameObject.GetComponent<Rigidbody2D>().velocity, facing_left ? Vector2.left : Vector2.right, true, false);
         }
     }
 
-    public void dropProjectile()
+    public void altProjectile()
     {
         if (weaponCooldown <= 0)
         {
             weaponCooldown = weapon.getCooldown();
             GameObject go = Resources.Load<GameObject>("projectile/Projectile");
             var proj = Instantiate(go);
-            proj.GetComponent<Projectile>().setProjType(weapon.getProjectileType(), this.transform.position, this.gameObject.GetComponent<Rigidbody2D>().velocity, Vector2.down, true);
+            proj.GetComponent<Projectile>().setProjType(weapon.getProjectileType(), this.transform.position, this.gameObject.GetComponent<Rigidbody2D>().velocity, Vector2.down, true, true);
         }
     }
 
