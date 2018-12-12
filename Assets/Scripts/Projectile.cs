@@ -38,18 +38,21 @@ public class Projectile : MonoBehaviour
         this.transform.eulerAngles =  new Vector3(0, 0, Mathf.Rad2Deg * Mathf.Atan2(firevec.y, firevec.x)); 
        
         float launchscale = 0;
+        float rel_vel_bias = 0;
 	    switch(p)
         {
             case ProjType.ARROW:
                 rb.gravityScale = 0.3f;
                 launchscale = 5;
-                firevec.y = 0.05f;
+                firevec.y = 0.1f;
+
                 break;
             case ProjType.AXE:
                 rb.gravityScale = 1f;
-                launchscale = 2;
+                launchscale = 3;
                 rb.AddTorque(1);
                     firevec.y = 0.3f;
+                rel_vel_bias = 1f;
                 break;
             case ProjType.BULLET:
                 rb.gravityScale = 0f;
@@ -57,7 +60,7 @@ public class Projectile : MonoBehaviour
                 break;
         }
         
-        GetComponent<Rigidbody2D>().velocity = rel_vel + (firevec * launchscale);
+        GetComponent<Rigidbody2D>().velocity = ( rel_vel_bias * rel_vel) + (firevec * launchscale);
         GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("projectile/" + p.ToString());
         var bx = gameObject.AddComponent<BoxCollider2D>();
         bx.size = 0.01f * getWeaponDim(p);

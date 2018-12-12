@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour {
+public abstract class Enemy : MonoBehaviour
+{
+    public abstract void setUp();
+    public abstract void doAI();
+    public abstract string spriteName();
+    public abstract GameObject create();
 
-    public void Create(EnemyCreator.Type t)
-    {
-
-    }
 	// Use this for initialization
 	void Start () {
 		
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		
+	void Update ()
+    {
+        doAI();
 	}
 }
