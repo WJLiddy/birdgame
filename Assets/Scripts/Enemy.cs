@@ -9,14 +9,23 @@ public abstract class Enemy : MonoBehaviour
     public abstract string spriteName();
     public abstract GameObject create();
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    // Use this for initialization
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
     {
         doAI();
-	}
+    }
+
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.rigidbody.gameObject.layer == 10)
+        {
+            Destroy(this.gameObject);
+        }
+    }
 }

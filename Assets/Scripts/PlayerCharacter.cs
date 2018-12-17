@@ -21,6 +21,10 @@ public class PlayerCharacter : MonoBehaviour
     public SpriteRenderer helmSprite;
     public SpriteRenderer weaponSprite;
     bool facing_left;
+
+    public float hurtCooldown = 0;
+    public static float hurtCooldownTime = 2f;
+
     // Use this for initialization
     void Start()
     {
@@ -181,4 +185,12 @@ public class PlayerCharacter : MonoBehaviour
     void Update () {
 		
 	}
+
+    public void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.rigidbody.gameObject.layer == 9)
+        {
+            Destroy(this.gameObject);
+        }
+    }
 }

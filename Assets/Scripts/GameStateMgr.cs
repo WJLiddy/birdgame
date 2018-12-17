@@ -14,6 +14,8 @@ public class GameStateMgr : MonoBehaviour
     public float levelOpenCinematicTimer = 0f;
     public List<GameObject> cubes = new List<GameObject>();
 
+    public static readonly bool ENABLE_CINEMATICS = false;
+
     public enum State
     {
         INTRO,
@@ -66,7 +68,7 @@ public class GameStateMgr : MonoBehaviour
 
     public void levelOpenCinematic()
     {
-        if(levelOpenCinematicTimer < 16)
+        if(levelOpenCinematicTimer < 16 && ENABLE_CINEMATICS)
         {
             levelOpenCinematicTimer += Time.deltaTime;
             Camera.main.GetComponent<GameCamera>().transform.position = new Vector3((1-((levelOpenCinematicTimer) / 16f)) * 80, 0, -10);

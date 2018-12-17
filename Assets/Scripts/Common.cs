@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Common
@@ -13,6 +14,13 @@ public class Common
             pc.Add(e.GetComponent<PlayerCharacter>());
         }
         return pc;
+    }
+
+    public static PlayerCharacter getClosestPC(Vector2 start)
+    {
+        return getPCs().Aggregate((minItem, nextItem) =>
+        Vector2.Distance(minItem.transform.position, start) <
+        Vector2.Distance(nextItem.transform.position, start) ? minItem : nextItem);
     }
 
     public static List<UsableItem> getUsables()

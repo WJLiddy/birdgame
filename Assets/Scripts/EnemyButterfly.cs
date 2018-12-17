@@ -26,6 +26,13 @@ public class EnemyButterfly : Enemy
 
     public override void doAI()
     {
+        PlayerCharacter closest = Common.getClosestPC(transform.position);
+        if(Vector2.Distance(closest.transform.position,transform.position) > 2)
+        {
+            return;
+        }
+        Vector2 dir = (closest.transform.position - transform.position).normalized;
+        GetComponent<Rigidbody2D>().velocity = dir / 4;
 
     }
 
@@ -33,9 +40,5 @@ public class EnemyButterfly : Enemy
     void Start () {
 		
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
 }

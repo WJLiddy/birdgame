@@ -70,10 +70,16 @@ public class LevelGenerator
         {
             for(int j = 0; j != plats.GetLength(1); ++j)
             {
+
                 if (!plats[i, j])
                 {
-                    if (Random.value > 0.9)
+                    // Decrease with leve counter.
+                    if (Random.value > 0.96)
                     {
+                        if (i < 20)
+                        {
+                            continue;
+                        }
                         var v = (new EnemyButterfly()).create();
                         v.transform.SetParent(parent.transform);
                         v.transform.position = new Vector2(i * TILE_SIZE / 100, j * TILE_SIZE / 100);
