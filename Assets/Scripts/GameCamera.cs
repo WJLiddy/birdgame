@@ -24,7 +24,7 @@ public class GameCamera : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-		if(trackingMode)
+		if(trackingMode && Common.getPCs().Count > 0)
         {
             transform.localPosition = new Vector3(avgPlayerX(), 0, -10);
         }

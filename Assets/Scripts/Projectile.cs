@@ -30,7 +30,6 @@ public class Projectile : MonoBehaviour
 	// Use this for initialization
 	public void setProjType(ProjType p, Vector2 start, Vector2 rel_vel, Vector2 firevec, bool friendly, bool alt)
     {
-
         this.gameObject.layer = friendly ? 10 : 11;
 
         var rb = GetComponent<Rigidbody2D>();
@@ -46,6 +45,12 @@ public class Projectile : MonoBehaviour
                 launchscale = 5;
                 firevec.y = 0.1f;
 
+                if(alt)
+                {
+                    firevec.y = 1f;
+                    launchscale = 3;
+                }
+
                 break;
             case ProjType.AXE:
                 rb.gravityScale = 1f;
@@ -53,13 +58,25 @@ public class Projectile : MonoBehaviour
                 rb.AddTorque(1);
                     firevec.y = 0.3f;
                 rel_vel_bias = 1f;
+
+                if (alt)
+                {
+                    firevec.y = 5f;
+                }
+
                 break;
             case ProjType.BULLET:
                 rb.gravityScale = 0f;
                 launchscale = 7;
+
+                if(alt)
+                {
+                    firevec.y = 1f;
+                }
                 break;
         }
-        
+
+        firevec = firevec.normalized;
         GetComponent<Rigidbody2D>().velocity = ( rel_vel_bias * rel_vel) + (firevec * launchscale);
         GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("projectile/" + p.ToString());
         var bx = gameObject.AddComponent<BoxCollider2D>();

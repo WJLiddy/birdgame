@@ -54,7 +54,8 @@ public class UsableItem : MonoBehaviour
                     caller.isReady = true;
                     GetSprite("rd");
                     break;
-                case "helm": caller.swapHelm(helmArgCol); break;
+                case "helm": caller.swapHelm(helmArgCol); Destroy(this.gameObject); break;
+                case "flag": Common.transition(GameStateMgr.State.GAMEPLAY); break;
             }
         }
     }

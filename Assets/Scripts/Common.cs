@@ -18,6 +18,8 @@ public class Common
 
     public static PlayerCharacter getClosestPC(Vector2 start)
     {
+        if (getPCs().Count == 0)
+            return null;
         return getPCs().Aggregate((minItem, nextItem) =>
         Vector2.Distance(minItem.transform.position, start) <
         Vector2.Distance(nextItem.transform.position, start) ? minItem : nextItem);

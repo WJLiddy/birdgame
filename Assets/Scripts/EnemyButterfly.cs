@@ -11,7 +11,7 @@ public class EnemyButterfly : Enemy
 
     public override GameObject create()
     {
-        GameObject go = GameObject.Instantiate(Resources.Load<GameObject>("GenericEnemy"));
+        GameObject go = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/GenericEnemy"));
         go.transform.SetParent(go.transform);
         GameObject parent = GameObject.Find("enemyParent");
 
@@ -27,6 +27,10 @@ public class EnemyButterfly : Enemy
     public override void doAI()
     {
         PlayerCharacter closest = Common.getClosestPC(transform.position);
+        if(closest == null)
+        {
+            return;
+        }
         if(Vector2.Distance(closest.transform.position,transform.position) > 2)
         {
             return;

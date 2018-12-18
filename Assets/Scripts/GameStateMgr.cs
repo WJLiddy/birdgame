@@ -14,6 +14,8 @@ public class GameStateMgr : MonoBehaviour
     public float levelOpenCinematicTimer = 0f;
     public List<GameObject> cubes = new List<GameObject>();
 
+    int lvl = 1;
+
     public static readonly bool ENABLE_CINEMATICS = false;
 
     public enum State
@@ -31,9 +33,13 @@ public class GameStateMgr : MonoBehaviour
         transition(State.CHARSELECT);
     }
 
-    public void setUpLevel()
+    public void setUpLevel(int difmod)
     {
-        level = LevelGenerator.levelGenerate();
+        if(level != null)
+        {
+            Destroy(level);
+        }
+        level = LevelGenerator.levelGenerate(difmod);
         level.transform.localPosition = new Vector2(0, -3);
         float i = 1;
         foreach(PlayerCharacter pc in Common.getPCs())
@@ -48,18 +54,18 @@ public class GameStateMgr : MonoBehaviour
         int pCount = JoyconManager.Instance.j.Count;
         if (pCount == 0)
         {
-            GameObject cube = Instantiate(Resources.Load<GameObject>("cubicle"));
+            GameObject cube = Instantiate(Resources.Load<GameObject>("prefabs/cubicle"));
             cubes.Add(cube);
-            GameObject player = Instantiate(Resources.Load<GameObject>("player"));
+            GameObject player = Instantiate(Resources.Load<GameObject>("prefabs/player"));
             cube.transform.localPosition = new Vector2(-2, 0);
             player.transform.localPosition = new Vector2(-1, 1);
             player.GetComponent<PlayerController>().useKeys = true;
         }
         if (pCount >= 1)
         {
-            GameObject cube = Instantiate(Resources.Load<GameObject>("cubicle"));
+            GameObject cube = Instantiate(Resources.Load<GameObject>("prefabs/cubicle"));
             cubes.Add(cube);
-            GameObject player = Instantiate(Resources.Load<GameObject>("player"));
+            GameObject player = Instantiate(Resources.Load<GameObject>("prefabs/player"));
             cube.transform.localPosition = new Vector2(-2, 0);
             player.transform.localPosition = new Vector2(-1, 1);
             player.GetComponent<PlayerController>().controllerID = 0;
@@ -112,7 +118,7 @@ public class GameStateMgr : MonoBehaviour
                         Destroy(go);
                     });
                 cubes.Clear();
-                setUpLevel();
+                setUpLevel(lvl++);
 
                     break;
         }
