@@ -49,26 +49,43 @@ public class GameStateMgr : MonoBehaviour
         }
     }
 
+    public void spawnPlayer(int id, bool useKeys)
+    {
+        bool y = (id == 0 || id == 1);
+        bool x = (id == 0 || id == 2);
+        GameObject cube = Instantiate(Resources.Load<GameObject>("prefabs/cubicle"));
+        cubes.Add(cube);
+        GameObject player = Instantiate(Resources.Load<GameObject>("prefabs/player"));
+        cube.transform.localPosition = new Vector2(x ? -2 : 2, y ? 0 : -2);
+        player.transform.localPosition = new Vector2(x ? -1 : 1, y ? 1 : -1);
+        player.GetComponent<PlayerController>().controllerID = id;
+        player.GetComponent<PlayerController>().useKeys = useKeys;
+        Common.pcs.Add(player.GetComponent<PlayerCharacter>());
+    }
+
     public void playerSetup()
     {
         int pCount = JoyconManager.Instance.j.Count;
         if (pCount == 0)
         {
-            GameObject cube = Instantiate(Resources.Load<GameObject>("prefabs/cubicle"));
-            cubes.Add(cube);
-            GameObject player = Instantiate(Resources.Load<GameObject>("prefabs/player"));
-            cube.transform.localPosition = new Vector2(-2, 0);
-            player.transform.localPosition = new Vector2(-1, 1);
-            player.GetComponent<PlayerController>().useKeys = true;
+            spawnPlayer(0, true);
         }
+        //disgust.
         if (pCount >= 1)
         {
-            GameObject cube = Instantiate(Resources.Load<GameObject>("prefabs/cubicle"));
-            cubes.Add(cube);
-            GameObject player = Instantiate(Resources.Load<GameObject>("prefabs/player"));
-            cube.transform.localPosition = new Vector2(-2, 0);
-            player.transform.localPosition = new Vector2(-1, 1);
-            player.GetComponent<PlayerController>().controllerID = 0;
+            spawnPlayer(0, false);
+        }
+        if (pCount >= 2)
+        {
+            spawnPlayer(1, false);
+        }
+        if (pCount >= 3)
+        {
+            spawnPlayer(2, false);
+        }
+        if (pCount >= 4)
+        {
+            spawnPlayer(3, false);
         }
     }
 

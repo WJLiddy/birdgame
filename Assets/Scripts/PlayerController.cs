@@ -47,23 +47,24 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        
         // later: prioritise based on input.
-        if ((useKeys && Input.GetKey(KeyCode.L)) || (!useKeys && j.GetButton(Joycon.Button.DPAD_UP)))
+        if ((useKeys && Input.GetKey(KeyCode.L)) || (!useKeys && j.GetButton(j.isLeft ? Joycon.Button.DPAD_DOWN : Joycon.Button.DPAD_UP)))
         {
             pc.fireProjectile();
         }
 
-        if ((useKeys && Input.GetKey(KeyCode.I)) || (!useKeys && j.GetButton(Joycon.Button.DPAD_LEFT)))
+        if ((useKeys && Input.GetKey(KeyCode.I)) || (!useKeys && j.GetButton(j.isLeft ? Joycon.Button.DPAD_RIGHT : Joycon.Button.DPAD_LEFT)))
         {
             pc.altProjectile();
         }
 
-        if ((!useKeys && j.GetButtonDown(Joycon.Button.DPAD_RIGHT)) || (useKeys && Input.GetKeyDown(KeyCode.K)))
+        if ((!useKeys && j.GetButtonDown(j.isLeft ? Joycon.Button.DPAD_LEFT : Joycon.Button.DPAD_RIGHT)) || (useKeys && Input.GetKeyDown(KeyCode.K)))
         {
             pc.attemptUse();
         }
 
-        pc.flyDirection(useKeys ? getKeyboardMoveVec() : new Vector2(j.GetStick()[1], -j.GetStick()[0]));
+        pc.flyDirection(useKeys ? getKeyboardMoveVec() : new Vector2((j.isLeft ? -1 : 1) * j.GetStick()[1], (j.isLeft ? -1 : 1) * -j.GetStick()[0]));
         /**
             // GetButtonDown checks if a button has been pressed (not held)
             if (j.GetButtonDown(Joycon.Button.SHOULDER_2))

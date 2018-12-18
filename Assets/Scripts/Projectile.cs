@@ -44,6 +44,7 @@ public class Projectile : MonoBehaviour
                 rb.gravityScale = 0.3f;
                 launchscale = 5;
                 firevec.y = 0.1f;
+                rel_vel_bias = 1;
 
                 if(alt)
                 {

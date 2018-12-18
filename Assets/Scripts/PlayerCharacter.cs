@@ -10,7 +10,8 @@ public class PlayerCharacter : MonoBehaviour
     public const float FLAP_IMPULSE = 3500;
     public const float FLAP_MAX_SEC = 0.3f;
     public const float RUN_FORCE_SEC = 75;
-    public float WALK_FRAME_SEC = 0.4f;
+    public const float WALK_FRAME_SEC = 0.4f;
+    public static float hurtCooldownTime = 2f;
     public float walkAnim;
     public float flapTime = 0;
     public float weaponCooldown = 0;
@@ -23,7 +24,6 @@ public class PlayerCharacter : MonoBehaviour
     bool facing_left;
 
     public float hurtCooldown = 0;
-    public static float hurtCooldownTime = 2f;
 
     // Use this for initialization
     void Start()
@@ -166,7 +166,7 @@ public class PlayerCharacter : MonoBehaviour
             GameObject go = Resources.Load<GameObject>("projectile/Projectile");
             var proj = Instantiate(go);
             // Don't bias with char position.
-            proj.GetComponent<Projectile>().setProjType(weapon.getProjectileType(), this.transform.position, new Vector2(GetComponent<Rigidbody2D>().velocity.x, 0), facing_left ? Vector2.left : Vector2.right, true, true);
+            proj.GetComponent<Projectile>().setProjType(weapon.getProjectileType(), this.transform.position, new Vector2(GetComponent<Rigidbody2D>().velocity.x, GetComponent<Rigidbody2D>().velocity.y), facing_left ? Vector2.left : Vector2.right, true, true);
         }
     }
 
@@ -182,15 +182,35 @@ public class PlayerCharacter : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update () {
-		
+    void Update ()
+    {
+        hurtCooldown -= Time.deltaTime;
+        hurtCooldown = Mathf.Max(0, hurtCooldown);
+
+        if(hurtCooldown * 4 % 1 >= 0.5)
+        {
+            GetComponent<SpriteRenderer>().enabled = false;
+            weaponSprite.enabled = false;
+        } else
+        {
+            GetComponent<SpriteRenderer>().enabled = true;
+            weaponSprite.enabled = true;
+        }
 	}
 
     public void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.rigidbody.gameObject.layer == 9)
+        if (col.rigidbody.gameObject.layer == 9 && hurtCooldown == 0)
         {
-            Destroy(this.gameObject);
+            if (helmSprite.sprite != null)
+            {
+                helmSprite.sprite = null;
+                hurtCooldown = hurtCooldownTime;
+            }
+            else
+            {
+                this.gameObject.SetActive(false);
+            }
         }
     }
 }

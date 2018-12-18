@@ -5,15 +5,36 @@ using UnityEngine;
 
 public class Common
 {
-    public static List<PlayerCharacter> getPCs()
+
+    // Add acessor later.
+    public static List<PlayerCharacter> pcs = new List<PlayerCharacter>();
+
+    public static List<PlayerCharacter> getPCs(bool alive_only = true)
     {
         List<PlayerCharacter> pc = new List<PlayerCharacter>();
 
-        foreach(var e in GameObject.FindGameObjectsWithTag("Player"))
+        foreach(var e in pcs)
         {
+            if(alive_only && !e.gameObject.active)
+            {
+                continue;
+            }
             pc.Add(e.GetComponent<PlayerCharacter>());
         }
         return pc;
+    }
+
+    public static void reviveAll(Vector2 start)
+    {
+        foreach(var pc in getPCs(false))
+        {
+            if(!pc.gameObject.active)
+            {
+                pc.gameObject.SetActive(true);
+                pc.transform.position = start;
+                pc.swapWeapon(new Crossbow());
+            }
+        }
     }
 
     public static PlayerCharacter getClosestPC(Vector2 start)

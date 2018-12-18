@@ -56,6 +56,7 @@ public class UsableItem : MonoBehaviour
                     break;
                 case "helm": caller.swapHelm(helmArgCol); Destroy(this.gameObject); break;
                 case "flag": Common.transition(GameStateMgr.State.GAMEPLAY); break;
+                case "cage": Common.reviveAll(this.transform.position); Destroy(this.gameObject); break;
             }
         }
     }

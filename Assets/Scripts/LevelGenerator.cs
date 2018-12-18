@@ -85,9 +85,10 @@ public class LevelGenerator
         var plats = getFilledGamePlatsAry(difmod);
         for (int i = 0; i != plats.GetLength(0); ++i)
         {
-            for (int j = 0; j != plats.GetLength(1); ++j)
+            bool cageset = false;
+            for (int j = 0; j < plats.GetLength(1) - 1; ++j)
             {
-
+               
                 if (!plats[i, j])
                 {
                     // Decrease with leve counter.
@@ -100,6 +101,17 @@ public class LevelGenerator
                         var v = (new EnemyButterfly()).create();
                         v.transform.SetParent(parent.transform);
                         v.transform.position = new Vector2(i * TILE_SIZE / 100, j * TILE_SIZE / 100);
+                    } else if (Random.value > .99f && plats[i,j-1])
+                    {
+                        GameObject helm = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/helm"));
+                        helm.transform.SetParent(parent.transform);
+                        helm.transform.position = new Vector2(i * TILE_SIZE / 100, j * TILE_SIZE / 100);
+                    } else if (i % 100 == 0 && !cageset && plats[i, j - 1] && Random.value > 0.3)
+                    {
+                        cageset = true;
+                        GameObject cage = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/cage"));
+                        cage.transform.SetParent(parent.transform);
+                        cage.transform.position = new Vector2(i * TILE_SIZE / 100, j * TILE_SIZE / 100);
                     }
                 }
                 else
