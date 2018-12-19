@@ -186,7 +186,7 @@ public class LevelGenerator
         }
 
         // items
-        else if (plats[x, y - 1] && Random.value > 0.996)
+        else if (plats[x, y - 1] && Random.value > 0.994)
         {
             GameObject item = null;
             switch(Random.Range(0,3))

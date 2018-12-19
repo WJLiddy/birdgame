@@ -19,7 +19,7 @@ public class GameStateMgr : MonoBehaviour
     float resetTimer = 0;
     float resetMax = 5;
 
-    public static readonly bool ENABLE_CINEMATICS = false;
+    public static readonly bool ENABLE_CINEMATICS = true;
 
     public enum State
     {
@@ -33,7 +33,7 @@ public class GameStateMgr : MonoBehaviour
 
     void Start()
     {
-        transition(State.CHARSELECT);
+        transition(State.INTRO);
     }
 
     public void setUpLevel(int difmod)
@@ -59,7 +59,7 @@ public class GameStateMgr : MonoBehaviour
         GameObject cube = Instantiate(Resources.Load<GameObject>("prefabs/cubicle"));
         cubes.Add(cube);
         GameObject player = Instantiate(Resources.Load<GameObject>("prefabs/player"));
-        cube.transform.localPosition = new Vector2(x ? -2 : 2, y ? 0 : -2);
+        cube.transform.localPosition = new Vector2(x ? -2 : 2, y ? 0 : -3);
         player.transform.localPosition = new Vector2(x ? -1 : 1, y ? 1 : -1);
         player.GetComponent<PlayerController>().controllerID = id;
         player.GetComponent<PlayerController>().useKeys = useKeys;
@@ -97,7 +97,7 @@ public class GameStateMgr : MonoBehaviour
         if(levelOpenCinematicTimer < 16 && ENABLE_CINEMATICS)
         {
             levelOpenCinematicTimer += Time.deltaTime;
-            Camera.main.GetComponent<GameCamera>().transform.position = new Vector3((1-((levelOpenCinematicTimer) / 16f)) * 80, 0, -10);
+            Camera.main.GetComponent<GameCamera>().transform.position = new Vector3((1-((levelOpenCinematicTimer) / 16f)) * 50, 0, -10);
         } else
         {
             Camera.main.GetComponent<GameCamera>().trackingMode = true;
@@ -120,6 +120,7 @@ public class GameStateMgr : MonoBehaviour
                 bass.Play();
                 break;
             case State.CHARSELECT:
+                Common.pcs = new List<PlayerCharacter>();
                 Camera.main.GetComponent<GameCamera>().trackingMode = false;
                 Camera.main.transform.localPosition = new Vector3(0, 0, -10);
                 lead.volume = 0f;
@@ -127,6 +128,9 @@ public class GameStateMgr : MonoBehaviour
                 playerSetup();
                 break;
             case State.GAMEPLAY:
+                Common.reviveAll(Vector2.zero);
+
+                Camera.main.GetComponent<GameCamera>().trackingMode = false;
                 levelOpenCinematicTimer = 0;
                 lead.volume = 1f;
                 lead.Stop();
@@ -153,6 +157,8 @@ public class GameStateMgr : MonoBehaviour
             levelOpenCinematic();
             if (Common.getPCs().Count == 0)
             {
+                lvl = 1;
+                
                 bass.Stop();
                 lead.Stop();
                 resetTimer += Time.deltaTime;
@@ -164,7 +170,7 @@ public class GameStateMgr : MonoBehaviour
                 }
             }
         }
-        if (!lead.isPlaying && currentState == State.CHARSELECT || currentState == State.TITLE)
+        if (!lead.isPlaying && (currentState == State.CHARSELECT || currentState == State.TITLE))
         {
             lead.time = 7.034f;
             bass.time = 7.034f;
@@ -173,7 +179,14 @@ public class GameStateMgr : MonoBehaviour
 
         }
 
-        if(currentState == State.CHARSELECT && Common.allPlayersReady())
+        if (!lead.isPlaying && currentState == State.GAMEPLAY && Common.getPCs().Count > 0)
+        {
+            lead.time = 47.33f;
+            lead.Play();
+
+        }
+
+        if (currentState == State.CHARSELECT && Common.allPlayersReady())
         {
             transition(State.GAMEPLAY);
         }

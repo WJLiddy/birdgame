@@ -27,7 +27,7 @@ public class Pistol : Weapon
     override public string getName() { return "F. LOCK"; }
     override public int getWeight() { return 5; }
     override public Projectile.ProjType getProjectileType() { return Projectile.ProjType.BULLET; }
-    override public float getCooldown() { return 0.5f; }
+    override public float getCooldown() { return 0.2f; }
     override public string getFilePath() { return "pistol"; }
 }
 

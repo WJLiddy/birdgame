@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemySnake : Enemy
 {
     public float shootCooldown = 0;
-    public float shootCooldownMax = 1f;
+    public float shootCooldownMax = 3f;
     public bool runDir;
     public float runSpeed = 0.4f;
 
