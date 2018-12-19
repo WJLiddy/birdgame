@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemySnake : Enemy
 {
     public float shootCooldown = 0;
-    public float shootCooldownMax = 0.5f;
+    public float shootCooldownMax = 1f;
     public bool runDir;
     public float runSpeed = 0.4f;
 
@@ -24,6 +24,7 @@ public class EnemySnake : Enemy
         GameObject go = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/GenericEnemy"));
         go.transform.SetParent(go.transform);
         GameObject parent = GameObject.Find("enemyParent");
+        go.AddComponent<EnemySnake>();
         go.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("enemy/" + spriteName());
         go.GetComponent<Rigidbody2D>().gravityScale = 0.5f;
         return go;
@@ -48,10 +49,14 @@ public class EnemySnake : Enemy
         if(Vector2.Distance(this.transform.position,closest.transform.position) < 3 && shootCooldown == 0)
         {
             shootCooldown = shootCooldownMax;
-            var angle = Vector2.Angle(this.transform.position, closest.transform.position);
-            makeProjectile(this.transform.position, new Vector2(Mathf.Sin(angle), Mathf.Cos(angle)));
-            makeProjectile(this.transform.position, new Vector2(Mathf.Sin(angle+10), Mathf.Cos(angle+10)));
-            makeProjectile(this.transform.position, new Vector2(Mathf.Sin(angle-10), Mathf.Cos(angle-10)));
+            var aimvec = closest.transform.position - this.transform.position;
+
+            aimvec = aimvec.normalized;
+            makeProjectile(this.transform.position, aimvec);
+            var angle = Mathf.Atan2(aimvec.x, aimvec.y);
+
+            makeProjectile(this.transform.position, new Vector2(Mathf.Sin(angle + 0.1f), Mathf.Cos(angle + 0.1f)));
+            makeProjectile(this.transform.position, new Vector2(Mathf.Sin(angle - 0.1f), Mathf.Cos(angle - 0.1f)));
         }
         // From mouse code.
         {

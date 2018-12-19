@@ -33,6 +33,7 @@ public abstract class Enemy : MonoBehaviour
     public void makeProjectile(Vector2 start, Vector2 vel)
     {
         GameObject go = Instantiate(Resources.Load<GameObject>("projectile/Projectile"));
+        go.GetComponent<Projectile>().setProjType(Projectile.ProjType.BULLET, start, Vector2.zero, vel, false, false);
         go.transform.position = start;
         go.GetComponent<Rigidbody2D>().velocity = vel;
         go.layer = 11;

@@ -171,7 +171,7 @@ public class LevelGenerator
 
     public static void tryGenerateItem(int x, int y, bool[,] plats, int difmod, GameObject parent, ref bool cageset)
     {
-        if (Random.value > .995f && plats[x, y - 1])
+        if (Random.value > .993f && plats[x, y - 1])
         {
             GameObject helm = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/helm"));
             helm.transform.SetParent(parent.transform);
@@ -183,6 +183,20 @@ public class LevelGenerator
             GameObject cage = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/cage"));
             cage.transform.SetParent(parent.transform);
             cage.transform.position = new Vector2(x * TILE_SIZE / 100, y * TILE_SIZE / 100);
+        }
+
+        // items
+        else if (plats[x, y - 1] && Random.value > 0.996)
+        {
+            GameObject item = null;
+            switch(Random.Range(0,3))
+            {
+                case 0: item = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/axe")); break;
+                case 1: item = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/cbow")); ; break;
+                case 2: item = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/pistol")); break;
+            }
+            item.transform.SetParent(parent.transform);
+            item.transform.position = new Vector2(x * TILE_SIZE / 100, y * TILE_SIZE / 100);
         }
     }
 

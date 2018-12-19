@@ -14,7 +14,7 @@ public class GameStateMgr : MonoBehaviour
     public float levelOpenCinematicTimer = 0f;
     public List<GameObject> cubes = new List<GameObject>();
 
-    int lvl = 7;
+    int lvl = 1;
 
     float resetTimer = 0;
     float resetMax = 5;

@@ -200,7 +200,7 @@ public class PlayerCharacter : MonoBehaviour
 
     public void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.rigidbody.gameObject.layer == 9 && hurtCooldown == 0)
+        if ((col.rigidbody.gameObject.layer == 9 || col.rigidbody.gameObject.layer == 11) && hurtCooldown == 0)
         {
             if (helmSprite.sprite != null)
             {
