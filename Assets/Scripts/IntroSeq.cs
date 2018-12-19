@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class IntroSeq : MonoBehaviour
 {
-    string intro = "Sample Text Games Company Incorporated";
+    string intro = "Sample Text Games";
     float maxTime = 5;
     float deltaTime = 0f;
     public UnityEngine.UI.Text t;

@@ -2,16 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyButterfly : Enemy
+
+public class EnemySpike : Enemy
 {
     public override bool killable()
     {
-        return true;
+        return false;
     }
 
     public override string spriteName()
     {
-        return "bfly";
+        return "spike";
+    }
+
+    public void setOrientation(float angle)
+    {
+        this.transform.eulerAngles = new Vector3(0, 0, angle);
     }
 
     public override GameObject create()
@@ -21,8 +27,8 @@ public class EnemyButterfly : Enemy
         GameObject parent = GameObject.Find("enemyParent");
 
         go.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("enemy/" + spriteName());
-        go.AddComponent<EnemyButterfly>();
-
+        go.AddComponent<EnemySpike>();
+        go.GetComponent<Rigidbody2D>().isKinematic = true;
         return go;
     }
 
@@ -33,23 +39,13 @@ public class EnemyButterfly : Enemy
 
     public override void doAI()
     {
-        PlayerCharacter closest = Common.getClosestPC(transform.position);
-        if(closest == null)
-        {
-            return;
-        }
-        if(Vector2.Distance(closest.transform.position,transform.position) > 2)
-        {
-            return;
-        }
-        Vector2 dir = (closest.transform.position - transform.position).normalized;
-        GetComponent<Rigidbody2D>().velocity = dir / 4;
-
+        //lol
     }
 
     // Use this for initialization
-    void Start () {
-		
-	}
+    void Start()
+    {
+
+    }
 
 }

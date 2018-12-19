@@ -14,7 +14,10 @@ public class GameStateMgr : MonoBehaviour
     public float levelOpenCinematicTimer = 0f;
     public List<GameObject> cubes = new List<GameObject>();
 
-    int lvl = 1;
+    int lvl = 7;
+
+    float resetTimer = 0;
+    float resetMax = 5;
 
     public static readonly bool ENABLE_CINEMATICS = false;
 
@@ -117,6 +120,8 @@ public class GameStateMgr : MonoBehaviour
                 bass.Play();
                 break;
             case State.CHARSELECT:
+                Camera.main.GetComponent<GameCamera>().trackingMode = false;
+                Camera.main.transform.localPosition = new Vector3(0, 0, -10);
                 lead.volume = 0f;
                 title.SetActive(false);
                 playerSetup();
@@ -146,13 +151,26 @@ public class GameStateMgr : MonoBehaviour
         if (currentState == State.GAMEPLAY)
         {
             levelOpenCinematic();
+            if (Common.getPCs().Count == 0)
+            {
+                bass.Stop();
+                lead.Stop();
+                resetTimer += Time.deltaTime;
+                if(resetTimer > resetMax)
+                {
+                    transition(State.CHARSELECT);
+                    resetTimer = 0;
+                    Destroy(level);
+                }
+            }
         }
-        if (!lead.isPlaying)
+        if (!lead.isPlaying && currentState == State.CHARSELECT || currentState == State.TITLE)
         {
             lead.time = 7.034f;
             bass.time = 7.034f;
             lead.Play();
             bass.Play();
+
         }
 
         if(currentState == State.CHARSELECT && Common.allPlayersReady())

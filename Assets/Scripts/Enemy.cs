@@ -8,6 +8,7 @@ public abstract class Enemy : MonoBehaviour
     public abstract void doAI();
     public abstract string spriteName();
     public abstract GameObject create();
+    public abstract bool killable();
 
     // Use this for initialization
     void Start()
@@ -23,9 +24,17 @@ public abstract class Enemy : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.rigidbody.gameObject.layer == 10)
+        if (col.rigidbody.gameObject.layer == 10 && killable())
         {
             Destroy(this.gameObject);
         }
+    }
+
+    public void makeProjectile(Vector2 start, Vector2 vel)
+    {
+        GameObject go = Instantiate(Resources.Load<GameObject>("projectile/Projectile"));
+        go.transform.position = start;
+        go.GetComponent<Rigidbody2D>().velocity = vel;
+        go.layer = 11;
     }
 }
